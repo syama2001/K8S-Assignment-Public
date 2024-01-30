@@ -14,9 +14,8 @@ curl <IP:TcpPort>
 	accessible Go to step 3 
  Else
 	Check in NodeportSVC  
-				- port: <00>
-					targetPort: <8000>
-	are mentioned right,Node Port specified correctly and externalTrafficPolicy is not mentioned as local. 
+
+	target port is mentioned right,Node Port specified correctly and externalTrafficPolicy is not mentioned as local. 
 
 3)Check curl localhost:<nodePort> is working or not 
 4)From external network , We need use the Public IP to access the Node Port.
