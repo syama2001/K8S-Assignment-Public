@@ -1,6 +1,7 @@
+A Kubernetes DaemonSet ensures a copy of a Pod is running across a set of nodes in a Kubernetes cluster.
+DaemonSets are used to deploy system daemons such as log collectors and monitoring agents, which typically 
+must run on every node.
+
 ReplicaSets should be used when you need to use multiple copies of application need to be run on a node.
 Daemon set is used When single copy of an application on all or subset of node in a cluster.
-
-A Kubernetes DaemonSet ensures a copy of a Pod is running across a set of nodes in a Kubernetes cluster.
-DaemonSets are used to deploy system daemons such as log collectors and monitoring agents, which typically must run on every node.
 
