@@ -1,0 +1,11 @@
+We can use Rolling Update Strategy in which it will slowly replace the pod of previous version of the application with instance of new version of application without downtime.
+
+We can use below for rolling Update Strategy as we have only one pod running
+
+As per below During a Rolling Update operation,it will create a new Pod, bringing the total to 2.
+By setting the maxUnavailable to zero, k8s  never let any Pod be unavailable, even if that means surging Pods above the replica count for a short time
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
