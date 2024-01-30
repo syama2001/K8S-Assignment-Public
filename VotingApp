@@ -1,0 +1,90 @@
+Delete voting Pod : It came up and the Voting app interface shows the new container ID
+--------------------------------------------------------------------------------------------------------------
+Delete Worker node : I coulde see that Voting app resumed working after worker pod comeup
+-----------------------------------------------------------------------------------------------------------------
+Delete  DB node : I could see Result and worker node started showing error and restarted as  DB node is not available to Push or Pull the data.
+These two nodes has dependency  to the DB node. 
+worker-dd46d7584-tl8rh    1/1     Running       0          3m10s
+[root@ip-172-31-35-201 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS        RESTARTS   AGE
+db-b54cd94f4-b7tkd        0/1     Terminating   0          5m48s
+db-b54cd94f4-gsqfl        1/1     Running       0          31s
+redis-868d64d78-h48hh     1/1     Running       0          5m48s
+result-5d57b59f4b-hcgb7   0/1     Error         0          5m48s
+vote-94849dc97-kp9fd      1/1     Running       0          5m16s
+worker-dd46d7584-tl8rh    0/1     Error         0          3m11s
+[root@ip-172-31-35-201 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-gsqfl        1/1     Running   0          39s
+redis-868d64d78-h48hh     1/1     Running   0          5m56s
+result-5d57b59f4b-hcgb7   1/1     Running   1          5m56s
+vote-94849dc97-kp9fd      1/1     Running   0          5m24s
+worker-dd46d7584-tl8rh    1/1     Running   1          3m19s
+
+
+
+I could see that Voting/Result app started working once the pods were up.
+----------------------------------------------------------------------------------------------
+Command Used :   kubectl apply -f .
+kubectl get po
+kubectl get svc -o wide	
+
+kubectl delete po vote-94849dc97-5j9zs
+kubectl get po
+kubectl delete po worker-dd46d7584-pt67h
+kubectl get po
+kubectl delete po db-b54cd94f4-b7tkd
+kubectl get po
+-----------------------------------------------------------------------------------------------
+Worker Logs :
+
+ 
+kubectl logs worker-dd46d7584-jkvg9
+Waiting for db
+Waiting for db
+Waiting for db
+Waiting for db
+Waiting for db
+Waiting for db
+Waiting for db
+Connected to db
+Found redis at 10.99.190.118
+Connecting to redis
+Processing vote for 'b' by '212b02690ad5a13'
+Processing vote for 'a' by '212b02690ad5a13'
+Processing vote for 'b' by '212b02690ad5a13'
+Processing vote for 'a' by '212b02690ad5a13'
+Processing vote for 'b' by '212b02690ad5a13'
+Processing vote for 'a' by '212b02690ad5a13'
+Processing vote for 'b' by '212b02690ad5a13'
+
+---------------------------------------------------------------------------------------------
+>>> kubectl logs  vote-94849dc97-bk9dc
+[2024-01-30 04:01:13 +0000] [1] [INFO] Starting gunicorn 21.2.0
+[2024-01-30 04:01:13 +0000] [1] [INFO] Listening at: http://0.0.0.0:80 (1)
+[2024-01-30 04:01:13 +0000] [1] [INFO] Using worker: sync
+[2024-01-30 04:01:13 +0000] [7] [INFO] Booting worker with pid: 7
+[2024-01-30 04:01:13 +0000] [8] [INFO] Booting worker with pid: 8
+[2024-01-30 04:01:13 +0000] [9] [INFO] Booting worker with pid: 9
+[2024-01-30 04:01:13 +0000] [10] [INFO] Booting worker with pid: 10
+192.168.118.128 - - [30/Jan/2024:04:01:17 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+[2024-01-30 04:01:21,853] INFO in app: Received vote for b
+[2024-01-30 04:01:21 +0000] [9] [INFO] Received vote for b
+192.168.118.128 - - [30/Jan/2024:04:01:21 +0000] "POST / HTTP/1.1" 200 1696 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+192.168.118.128 - - [30/Jan/2024:04:01:21 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+[2024-01-30 04:01:25,984] INFO in app: Received vote for a
+[2024-01-30 04:01:25 +0000] [10] [INFO] Received vote for a
+192.168.118.128 - - [30/Jan/2024:04:01:25 +0000] "POST / HTTP/1.1" 200 1696 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+192.168.118.128 - - [30/Jan/2024:04:01:26 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+[2024-01-30 04:01:29,955] INFO in app: Received vote for b
+[2024-01-30 04:01:29 +0000] [8] [INFO] Received vote for b
+192.168.118.128 - - [30/Jan/2024:04:01:29 +0000] "POST / HTTP/1.1" 200 1696 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+192.168.118.128 - - [30/Jan/2024:04:01:30 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+[2024-01-30 04:01:33,987] INFO in app: Received vote for a
+[2024-01-30 04:01:33 +0000] [9] [INFO] Received vote for a
+192.168.118.128 - - [30/Jan/2024:04:01:33 +0000] "POST / HTTP/1.1" 200 1696 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+192.168.118.128 - - [30/Jan/2024:04:01:34 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+[2024-01-30 04:01:38,497] INFO in app: Received vote for b
+[2024-01-30 04:01:38 +0000] [7] [INFO] Received vote for b
+192.168.118.128 - - [30/Jan/2024:04:01:38 +0000] "POST / HTTP/1.1" 200 1696 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+192.168.118.128 - - [30/Jan/2024:04:01:38 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.254.170.7:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
